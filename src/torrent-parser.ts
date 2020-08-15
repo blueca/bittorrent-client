@@ -10,6 +10,7 @@ interface info {
 
 interface torrent {
   info: info;
+  announce: any;
 }
 
 const open = (filepath: string) => {

@@ -1,6 +1,6 @@
 import dgram from 'dgram';
 import { Buffer } from 'buffer';
-import { parse, UrlWithParsedQuery } from 'url';
+import { parse, UrlWithParsedQuery, UrlWithStringQuery } from 'url';
 import crypto from 'crypto';
 import genId from './utils';
 import torrentParser from './torrent-parser';
@@ -17,7 +17,7 @@ interface torrent {
 
 function getPeers(torrent: torrent, cb: CallableFunction): void {
   const socket = dgram.createSocket('udp4');
-  const url: UrlWithParsedQuery = torrent.announce.toString('utf8');
+  const url: string = torrent.announce.toString('utf8');
 
   udpSend(socket, buildConnReq(), url);
 
@@ -38,14 +38,22 @@ function getPeers(torrent: torrent, cb: CallableFunction): void {
 const udpSend = (
   socket: dgram.Socket,
   message: Buffer,
-  url: UrlWithParsedQuery,
+  url: string,
   cb = () => {
     return null;
   }
 ) => {
-  const parsedUrl = parse(url.href);
-  if (!url.port || !url.host) throw 'url missing properties';
-  socket.send(message, 0, message.length, parseInt(url.port), url.host, cb);
+  const parsedUrl = parse(url);
+
+  if (!parsedUrl.port || !parsedUrl.host) throw 'url missing properties';
+  socket.send(
+    message,
+    0,
+    message.length,
+    parseInt(parsedUrl.port),
+    parsedUrl.host,
+    cb
+  );
 };
 
 const respType = (resp: Buffer): string => {
@@ -56,7 +64,7 @@ const buildConnReq = () => {
   const buffer = Buffer.alloc(16);
 
   buffer.writeUInt32BE(0x417, 0);
-  buffer.writeUInt32BE(0x271019890, 4);
+  buffer.writeUInt32BE(0x27101980, 4);
   buffer.writeUInt32BE(0, 8);
   crypto.randomBytes(4).copy(buffer, 12);
 
