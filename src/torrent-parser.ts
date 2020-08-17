@@ -2,16 +2,7 @@ import fs from 'fs';
 import bencoder from 'bencoder';
 import crypto from 'crypto';
 import { Buffer } from 'buffer';
-
-interface info {
-  files: string[];
-  length: number;
-}
-
-interface torrent {
-  info: info;
-  announce: any;
-}
+import torrentType from './interfaces';
 
 const open = (filepath: string) => {
   return fs.promises
@@ -24,7 +15,7 @@ const open = (filepath: string) => {
     });
 };
 
-const size = (torrent: torrent): Buffer => {
+const size = (torrent: torrentType): Buffer => {
   const size = torrent.info.files
     ? torrent.info.files
         .map((file) => file.length)
@@ -34,7 +25,7 @@ const size = (torrent: torrent): Buffer => {
   return Buffer.from((BigInt(size) as unknown) as string);
 };
 
-const infoHash = (torrent: torrent): Buffer => {
+const infoHash = (torrent: torrentType): Buffer => {
   const info = bencoder.encode(torrent.info);
   return crypto.createHash('sha1').update(info).digest();
 };

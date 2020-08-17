@@ -4,22 +4,15 @@ import { parse, UrlWithParsedQuery, UrlWithStringQuery } from 'url';
 import crypto from 'crypto';
 import genId from './utils';
 import torrentParser from './torrent-parser';
+import torrentType from './interfaces';
 
-interface info {
-  files: string[];
-  length: number;
-}
-
-interface torrent {
-  info: info;
-  announce: any;
-}
-
-function getPeers(torrent: torrent, cb: CallableFunction): void {
+function getPeers(torrent: torrentType, cb: CallableFunction): void {
   const socket = dgram.createSocket('udp4');
-  const url: string = torrent.announce.toString('utf8');
+  const url: string = torrent.announce;
 
   udpSend(socket, buildConnReq(), url);
+
+  console.log(torrent);
 
   socket.on('message', (response) => {
     if (respType(response) === 'connect') {
@@ -57,7 +50,7 @@ const udpSend = (
 };
 
 const respType = (resp: Buffer): string => {
-  return 'test';
+  return 'connect';
 };
 
 const buildConnReq = () => {
@@ -79,7 +72,11 @@ const parseConnResp = (resp: Buffer) => {
   };
 };
 
-const buildAnnounceReq = (connId: Buffer, torrent: torrent, port = 6881) => {
+const buildAnnounceReq = (
+  connId: Buffer,
+  torrent: torrentType,
+  port = 6881
+) => {
   const buffer = Buffer.allocUnsafe(98);
 
   connId.copy(buffer, 0);
