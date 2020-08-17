@@ -1,32 +1,34 @@
 import dgram from 'dgram';
 import { Buffer } from 'buffer';
-import { parse, UrlWithParsedQuery, UrlWithStringQuery } from 'url';
+import { parse } from 'url';
 import crypto from 'crypto';
 import genId from './utils';
 import torrentParser from './torrent-parser';
 import torrentType from './interfaces';
 
-function getPeers(torrent: torrentType, cb: CallableFunction): void {
+const getPeers = (torrent: torrentType, cb: CallableFunction): void => {
   const socket = dgram.createSocket('udp4');
   const url: string = torrent.announce;
 
   udpSend(socket, buildConnReq(), url);
 
-  console.log(torrent);
-
   socket.on('message', (response) => {
     if (respType(response) === 'connect') {
+      console.log('connect');
       const connResp = parseConnResp(response);
       const announceReq = buildAnnounceReq(connResp.connectionId, torrent);
 
       udpSend(socket, announceReq, url);
     } else if (respType(response) === 'announce') {
+      console.log('announce');
       const announceResp = parseAnnounceResp(response);
 
       cb(announceResp.peers);
+    } else {
+      console.log('something going wrong');
     }
   });
-}
+};
 
 const udpSend = (
   socket: dgram.Socket,
@@ -38,19 +40,22 @@ const udpSend = (
 ) => {
   const parsedUrl = parse(url);
 
-  if (!parsedUrl.port || !parsedUrl.host) throw 'url missing properties';
+  if (!parsedUrl.port || !parsedUrl.hostname) throw 'url missing properties';
   socket.send(
     message,
     0,
     message.length,
     parseInt(parsedUrl.port),
-    parsedUrl.host,
+    parsedUrl.hostname,
     cb
   );
 };
 
 const respType = (resp: Buffer): string => {
-  return 'connect';
+  const action = resp.readUInt32BE(0);
+  if (action === 0) return 'connect';
+  if (action === 1) return 'announce';
+  throw 'invalid response';
 };
 
 const buildConnReq = () => {
