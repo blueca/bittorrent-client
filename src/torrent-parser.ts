@@ -4,7 +4,7 @@ import crypto from 'crypto';
 import { Buffer } from 'buffer';
 import torrentType from './interfaces';
 
-const open = (filepath: string) => {
+const open = (filepath: string): Promise<torrentType> => {
   return fs.promises
     .readFile(filepath)
     .then((buffer) => {
