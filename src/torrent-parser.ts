@@ -22,7 +22,7 @@ const size = (torrent: torrentType): Buffer => {
         .reduce((acc: number, cur: number) => acc + cur, 0)
     : torrent.info.length;
 
-  return Buffer.from((BigInt(size) as unknown) as string);
+  return Buffer.from(BigInt(size).toString());
 };
 
 const infoHash = (torrent: torrentType): Buffer => {
