@@ -18,7 +18,7 @@ interface info {
   files: file[];
 }
 
-export default interface torrentType {
+interface torrentType {
   info: info;
   announce: string;
   'announce-list'?: string[][];
@@ -27,3 +27,10 @@ export default interface torrentType {
   'created by'?: string;
   encoding?: string;
 }
+
+interface peerType {
+  ip: string;
+  port: number;
+}
+
+export { torrentType, peerType };
