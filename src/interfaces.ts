@@ -33,4 +33,16 @@ interface peerType {
   port: number;
 }
 
-export { torrentType, peerType };
+interface requestPayload {
+  index: number;
+  begin: number;
+  length: number;
+}
+
+interface piecePayload {
+  index: number;
+  begin: number;
+  block: any;
+}
+
+export { torrentType, peerType, requestPayload, piecePayload };
