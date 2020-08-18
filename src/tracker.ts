@@ -4,7 +4,7 @@ import { parse } from 'url';
 import crypto from 'crypto';
 import genId from './utils';
 import torrentParser from './torrent-parser';
-import torrentType from './interfaces';
+import { torrentType } from './interfaces';
 
 const getPeers = (torrent: torrentType, cb: CallableFunction): void => {
   const socket = dgram.createSocket('udp4');
