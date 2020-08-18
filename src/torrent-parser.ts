@@ -2,7 +2,7 @@ import fs from 'fs';
 import bencoder from 'bencoder';
 import crypto from 'crypto';
 import { Buffer } from 'buffer';
-import torrentType from './interfaces';
+import { torrentType } from './interfaces';
 
 const open = (filepath: string): Promise<torrentType> => {
   return fs.promises
