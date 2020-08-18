@@ -1,15 +1,20 @@
 import getPeers from './tracker';
 import torrentParser from './torrent-parser';
 
-const run = async () => {
-  try {
-    const torrent = await torrentParser.open('puppy.torrent');
+interface peer {
+  ip: string;
+  port: number;
+}
 
-    getPeers(torrent, (peers: number[]) => {
+const run = async () => {
+  const torrent = await torrentParser.open('boat.torrent').catch((err) => {
+    console.log(err);
+  });
+
+  if (torrent) {
+    getPeers(torrent, (peers: peer[]) => {
       console.log('>> peers: ', peers);
     });
-  } catch (err) {
-    console.log(err);
   }
 };
 

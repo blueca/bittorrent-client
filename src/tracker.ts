@@ -14,18 +14,14 @@ const getPeers = (torrent: torrentType, cb: CallableFunction): void => {
 
   socket.on('message', (response) => {
     if (respType(response) === 'connect') {
-      console.log('connect');
       const connResp = parseConnResp(response);
       const announceReq = buildAnnounceReq(connResp.connectionId, torrent);
 
       udpSend(socket, announceReq, url);
     } else if (respType(response) === 'announce') {
-      console.log('announce');
       const announceResp = parseAnnounceResp(response);
 
       cb(announceResp.peers);
-    } else {
-      console.log('something going wrong');
     }
   });
 };
