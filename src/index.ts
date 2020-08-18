@@ -7,7 +7,7 @@ interface peer {
 }
 
 const run = async () => {
-  const torrent = await torrentParser.open('boat.torrent').catch((err) => {
+  const torrent = await torrentParser.open(process.argv[2]).catch((err) => {
     console.log(err);
   });
 
