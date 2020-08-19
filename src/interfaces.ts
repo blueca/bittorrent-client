@@ -45,4 +45,11 @@ interface piecePayload {
   block: any;
 }
 
-export { torrentType, peerType, requestPayload, piecePayload };
+interface payloadType {
+  index: number;
+  begin: number;
+  block?: Buffer;
+  length?: Buffer;
+}
+
+export { torrentType, peerType, requestPayload, piecePayload, payloadType };
