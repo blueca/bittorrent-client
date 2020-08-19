@@ -1,6 +1,11 @@
 import { Buffer } from 'buffer';
 import torrentParser from './torrent-parser';
-import { torrentType, requestPayload, piecePayload } from './interfaces';
+import {
+  torrentType,
+  requestPayload,
+  piecePayload,
+  payloadType
+} from './interfaces';
 import genId from './utils';
 
 const buildHandshake = (torrent: torrentType): Buffer => {
@@ -107,6 +112,26 @@ const buildPort = (port: number): Buffer => {
   buffer.writeUInt16BE(port, 5);
 
   return buffer;
+};
+
+const parseMessage = (msg: Buffer) => {
+  const id = msg.length > 4 ? msg.readInt8(4) : null;
+  const payload = msg.length > 5 ? msg.slice(5) : null;
+
+  if (payload !== null && (id === 6 || id === 7 || id === 8)) {
+    const rest = payload.slice(8);
+    const newPayload: payloadType = {
+      index: payload.readInt32BE(0),
+      begin: payload.readInt32BE(4)
+    };
+    newPayload[id === 7 ? 'block' : 'length'] = rest;
+  }
+
+  return {
+    size: msg.readInt32BE(0),
+    id: id,
+    payload: payload
+  };
 };
 
 export default {
