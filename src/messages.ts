@@ -4,7 +4,8 @@ import {
   torrentType,
   requestPayload,
   piecePayload,
-  payloadType
+  payloadType,
+  parsedMessageType
 } from './interfaces';
 import genId from './utils';
 
@@ -114,17 +115,18 @@ const buildPort = (port: number): Buffer => {
   return buffer;
 };
 
-const parseMessage = (msg: Buffer) => {
+const parseMessage = (msg: Buffer): parsedMessageType => {
   const id = msg.length > 4 ? msg.readInt8(4) : null;
-  const payload = msg.length > 5 ? msg.slice(5) : null;
+  let payload: Buffer | payloadType | null =
+    msg.length > 5 ? msg.slice(5) : null;
 
   if (payload !== null && (id === 6 || id === 7 || id === 8)) {
     const rest = payload.slice(8);
-    const newPayload: payloadType = {
+    payload = {
       index: payload.readInt32BE(0),
       begin: payload.readInt32BE(4)
     };
-    newPayload[id === 7 ? 'block' : 'length'] = rest;
+    payload[id === 7 ? 'block' : 'length'] = rest;
   }
 
   return {
@@ -146,5 +148,6 @@ export default {
   buildRequest,
   buildPiece,
   buildCancel,
-  buildPort
+  buildPort,
+  parseMessage
 };
