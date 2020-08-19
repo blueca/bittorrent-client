@@ -52,4 +52,17 @@ interface payloadType {
   length?: Buffer;
 }
 
-export { torrentType, peerType, requestPayload, piecePayload, payloadType };
+interface parsedMessageType {
+  size: number;
+  id: number | null;
+  payload: payloadType | Buffer | null;
+}
+
+export {
+  torrentType,
+  peerType,
+  requestPayload,
+  piecePayload,
+  payloadType,
+  parsedMessageType
+};
