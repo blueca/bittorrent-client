@@ -58,11 +58,17 @@ interface parsedMessageType {
   payload: payloadType | Buffer | null;
 }
 
+interface queueType {
+  choked: boolean;
+  queue: number[];
+}
+
 export {
   torrentType,
   peerType,
   requestPayload,
   piecePayload,
   payloadType,
-  parsedMessageType
+  parsedMessageType,
+  queueType
 };
