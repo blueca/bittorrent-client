@@ -63,6 +63,12 @@ interface queueType {
   queue: number[];
 }
 
+interface pieceBlockType {
+  index: number;
+  begin: number;
+  length: number;
+}
+
 export {
   torrentType,
   peerType,
@@ -70,5 +76,6 @@ export {
   piecePayload,
   payloadType,
   parsedMessageType,
-  queueType
+  queueType,
+  pieceBlockType
 };
