@@ -1,30 +1,46 @@
+import torrentParser from './torrent-parser';
+import { torrentType, pieceBlockType } from './interfaces';
+
 class Pieces {
-  private _requested: boolean[];
-  private _received: boolean[];
+  private _requested: boolean[][];
+  private _received: boolean[][];
 
-  constructor(size: number) {
-    this._requested = new Array(size).fill(false);
-    this._received = new Array(size).fill(false);
+  constructor(torrent: torrentType) {
+    function buildPiecesArray(): boolean[][] {
+      const nPieces = torrent.info.pieces.length / 20;
+      const arr = new Array(nPieces).fill(null);
+      return arr.map((_, index) => {
+        return new Array(torrentParser.blocksPerPiece(torrent, index)).fill(
+          false
+        );
+      });
+    }
+    this._requested = buildPiecesArray();
+    this._received = buildPiecesArray();
   }
 
-  addRequested(pieceIndex: number): void {
-    this._requested[pieceIndex] = true;
+  addRequested(pieceBlock: pieceBlockType): void {
+    const blockIndex = pieceBlock.begin / torrentParser.BLOCK_LEN;
+    this._requested[pieceBlock.index][blockIndex] = true;
   }
 
-  addReceived(pieceIndex: number): void {
-    this._received[pieceIndex] = true;
+  addReceived(pieceBlock: pieceBlockType): void {
+    const blockIndex = pieceBlock.begin / torrentParser.BLOCK_LEN;
+    this._received[pieceBlock.index][blockIndex] = true;
   }
 
-  needed(pieceIndex: number): boolean {
-    if (this._requested.every((elem) => elem === true)) {
-      this._requested = this._received.slice();
+  needed(pieceBlock: pieceBlockType): boolean {
+    if (this._requested.every((blocks) => blocks.every((elem) => elem))) {
+      this._requested = this._received.map((blocks) => blocks.slice());
     }
 
-    return !this._requested[pieceIndex];
+    const blockIndex = pieceBlock.begin / torrentParser.BLOCK_LEN;
+
+    return !this._requested[pieceBlock.index][blockIndex];
   }
 
   isDone(): boolean {
-    return this._received.every((elem) => elem === true);
+    return this._received.every((blocks) => blocks.every((elem) => elem));
   }
 }
 
