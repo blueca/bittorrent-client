@@ -1,30 +1,30 @@
 class Pieces {
-  private requested: boolean[];
-  private received: boolean[];
+  private _requested: boolean[];
+  private _received: boolean[];
 
   constructor(size: number) {
-    this.requested = new Array(size).fill(false);
-    this.received = new Array(size).fill(false);
+    this._requested = new Array(size).fill(false);
+    this._received = new Array(size).fill(false);
   }
 
   addRequested(pieceIndex: number): void {
-    this.requested[pieceIndex] = true;
+    this._requested[pieceIndex] = true;
   }
 
   addReceived(pieceIndex: number): void {
-    this.received[pieceIndex] = true;
+    this._received[pieceIndex] = true;
   }
 
   needed(pieceIndex: number): boolean {
-    if (this.requested.every((elem) => elem === true)) {
-      this.requested = this.received.slice();
+    if (this._requested.every((elem) => elem === true)) {
+      this._requested = this._received.slice();
     }
 
-    return !this.requested[pieceIndex];
+    return !this._requested[pieceIndex];
   }
 
   isDone(): boolean {
-    return this.received.every((elem) => elem === true);
+    return this._received.every((elem) => elem === true);
   }
 }
 
