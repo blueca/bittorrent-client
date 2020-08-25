@@ -4,12 +4,12 @@ import torrentParser from './torrent-parser';
 class Queue {
   private _torrent: torrentType;
   private _queue: pieceBlockType[];
-  private _choked: boolean;
+  public choked: boolean;
 
   constructor(torrent: torrentType) {
     this._torrent = torrent;
     this._queue = [];
-    this._choked = true;
+    this.choked = true;
   }
 
   queue(pieceIndex: number): void {
