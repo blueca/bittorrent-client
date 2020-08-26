@@ -1,4 +1,4 @@
-import fs from 'fs';
+import fs from 'fs/promises';
 import bencoder from 'bencoder';
 import crypto from 'crypto';
 import { Buffer } from 'buffer';
@@ -7,7 +7,7 @@ import { torrentType } from './interfaces';
 const BLOCK_LEN: number = Math.pow(2, 14);
 
 const open = (filepath: string): Promise<torrentType> => {
-  return fs.promises
+  return fs
     .readFile(filepath)
     .then((buffer) => {
       return bencoder.decode(buffer, 'utf8');
