@@ -1,9 +1,9 @@
-import { torrentType, pieceBlockType } from './interfaces';
+import { torrentType, requestPayload } from './interfaces';
 import torrentParser from './torrent-parser';
 
 class Queue {
   private _torrent: torrentType;
-  private _queue: pieceBlockType[];
+  private _queue: requestPayload[];
   public choked: boolean;
 
   constructor(torrent: torrentType) {
@@ -24,11 +24,11 @@ class Queue {
     }
   }
 
-  deQueue(): pieceBlockType | undefined {
+  deQueue(): requestPayload | undefined {
     return this._queue.shift();
   }
 
-  peek(): pieceBlockType {
+  peek(): requestPayload {
     return this._queue[0];
   }
 
