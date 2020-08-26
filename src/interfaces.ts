@@ -36,13 +36,14 @@ interface peerType {
 interface requestPayload {
   index: number;
   begin: number;
-  length: number;
+  length?: number;
+  block?: Buffer;
 }
 
 interface piecePayload {
   index: number;
   begin: number;
-  block: any;
+  block: Buffer;
 }
 
 interface payloadType {
@@ -58,24 +59,11 @@ interface parsedMessageType {
   payload: payloadType | Buffer | null;
 }
 
-interface queueType {
-  choked: boolean;
-  queue: number[];
-}
-
-interface pieceBlockType {
-  index: number;
-  begin: number;
-  length: number;
-}
-
 export {
   torrentType,
   peerType,
   requestPayload,
   piecePayload,
   payloadType,
-  parsedMessageType,
-  queueType,
-  pieceBlockType
+  parsedMessageType
 };
