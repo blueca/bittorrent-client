@@ -79,7 +79,7 @@ const buildRequest = (payload: requestPayload): Buffer => {
   buffer.writeUInt8(6, 4);
   buffer.writeUInt32BE(payload.index, 5);
   buffer.writeUInt32BE(payload.begin, 9);
-  buffer.writeUInt32BE(payload.length, 13);
+  buffer.writeUInt32BE(payload.length as number, 13);
 
   return buffer;
 };
@@ -101,7 +101,7 @@ const buildCancel = (payload: requestPayload): Buffer => {
   buffer.writeUInt8(8, 4);
   buffer.writeUInt32BE(payload.index, 5);
   buffer.writeUInt32BE(payload.begin, 9);
-  buffer.writeUInt32BE(payload.length, 13);
+  buffer.writeUInt32BE(payload.length as number, 13);
 
   return buffer;
 };
