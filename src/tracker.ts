@@ -8,7 +8,7 @@ import { torrentType } from './interfaces';
 
 const getPeers = (torrent: torrentType, cb: CallableFunction): void => {
   const socket = dgram.createSocket('udp4');
-  const url: string = torrent.announce;
+  const url: string = torrent.announce.toString();
 
   udpSend(socket, buildConnReq(), url);
 
