@@ -16,7 +16,8 @@ const buildHandshake = (torrent: torrentType): Buffer => {
   buffer.writeUInt32BE(0, 20);
   buffer.writeUInt32BE(0, 24);
   torrentParser.infoHash(torrent).copy(buffer, 28);
-  buffer.write(genId().toString());
+
+  genId().copy(buffer, 48);
 
   return buffer;
 };
