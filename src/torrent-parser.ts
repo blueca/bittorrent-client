@@ -1,5 +1,6 @@
 import fs from 'fs/promises';
 import bencoder from 'bencoder';
+import bencode from 'bencode';
 import crypto from 'crypto';
 import { Buffer } from 'buffer';
 import { torrentType } from './interfaces';
@@ -10,7 +11,7 @@ const open = (filepath: string): Promise<torrentType> => {
   return fs
     .readFile(filepath)
     .then((buffer) => {
-      return bencoder.decode(buffer, 'utf8');
+      return bencode.decode(buffer);
     })
     .catch((err) => {
       throw err;
