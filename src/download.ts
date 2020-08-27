@@ -155,15 +155,18 @@ const pieceHandler = (
 
   fs.write(file, pieceRespBlock, 0, pieceRespBlock.length, offset, (err) => {
     // eslint-disable-next-line no-console
-    console.log(err);
+    if (err) console.log(err);
   });
 
   if (pieces.isDone()) {
     // eslint-disable-next-line no-console
     console.log('>>> COMPLETE <<<');
     socket.end();
-    // eslint-disable-next-line no-console
-    fs.close(file, (err) => console.log(err));
+    fs.close(file, (err) => {
+      // eslint-disable-next-line no-console
+      if (err) console.log(err);
+      process.exit();
+    });
   } else {
     requestPiece(socket, pieces, queue);
   }
