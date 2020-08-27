@@ -1,5 +1,4 @@
 import fs from 'fs/promises';
-import bencoder from 'bencoder';
 import bencode from 'bencode';
 import crypto from 'crypto';
 import { Buffer } from 'buffer';
@@ -24,12 +23,15 @@ const size = (torrent: torrentType): Buffer => {
         .map((file) => file.length)
         .reduce((acc: number, cur: number) => acc + cur, 0)
     : torrent.info.length;
+  const buffer = Buffer.allocUnsafe(16);
 
-  return Buffer.from(BigInt(size).toString());
+  buffer.writeBigInt64BE(BigInt(size));
+
+  return buffer;
 };
 
 const infoHash = (torrent: torrentType): Buffer => {
-  const info = bencoder.encode(torrent.info);
+  const info = bencode.encode(torrent.info);
   return crypto.createHash('sha1').update(info).digest();
 };
 
