@@ -146,8 +146,6 @@ const pieceHandler = (
   file: number,
   pieceResp: requestPayload
 ) => {
-  // eslint-disable-next-line no-console
-  console.log(pieceResp);
   pieces.addReceived(pieceResp);
 
   const offset =
