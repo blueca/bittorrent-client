@@ -9,6 +9,8 @@ import {
 } from './interfaces';
 import genId from './utils';
 
+// See below link for breakdown of the items written to the handshake buffer
+// https://wiki.theory.org/index.php/BitTorrentSpecification#Handshake
 const buildHandshake = (torrent: torrentType): Buffer => {
   const buffer = Buffer.alloc(68);
   buffer.writeUInt8(19, 0);
@@ -22,6 +24,8 @@ const buildHandshake = (torrent: torrentType): Buffer => {
   return buffer;
 };
 
+// See below link for breakdown of the items written to the buffers for subsequent functions
+// https://wiki.theory.org/index.php/BitTorrentSpecification#Messages
 const buildKeepAlive = (): Buffer => Buffer.alloc(4);
 
 const buildChoke = (): Buffer => {
